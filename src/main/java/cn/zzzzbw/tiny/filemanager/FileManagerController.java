@@ -1,9 +1,9 @@
-package com.example.uploadingfiles;
+package cn.zzzzbw.tiny.filemanager;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.stream.Collectors;
 
+import cn.zzzzbw.tiny.filemanager.storage.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -20,16 +20,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.uploadingfiles.storage.StorageFileNotFoundException;
-import com.example.uploadingfiles.storage.StorageService;
+import cn.zzzzbw.tiny.filemanager.storage.StorageService;
 
 @Controller
-public class FileUploadController {
+public class FileManagerController {
 
 	private final StorageService storageService;
 
 	@Autowired
-	public FileUploadController(StorageService storageService) {
+	public FileManagerController(StorageService storageService) {
 		this.storageService = storageService;
 	}
 
@@ -38,7 +37,7 @@ public class FileUploadController {
 	public String listUploadedFiles(Model model) throws IOException {
 
 		model.addAttribute("files", storageService.loadAll().map(
-				path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+				path -> MvcUriComponentsBuilder.fromMethodName(FileManagerController.class,
 						"serveFile", path.getFileName().toString()).build().toUri().toString())
 				.collect(Collectors.toList()));
 

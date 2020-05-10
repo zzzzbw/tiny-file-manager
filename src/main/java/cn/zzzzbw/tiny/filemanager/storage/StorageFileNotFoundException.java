@@ -1,4 +1,4 @@
-package com.example.uploadingfiles.storage;
+package cn.zzzzbw.tiny.filemanager.storage;
 
 public class StorageFileNotFoundException extends StorageException {
 
