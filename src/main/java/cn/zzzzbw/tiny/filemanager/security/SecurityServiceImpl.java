@@ -14,7 +14,7 @@ public class SecurityServiceImpl implements SecurityService {
     private SecurityProperties securityProperties;
 
     @Override
-    public boolean valid(String authorization) {
-        return false;
+    public boolean login(String key) {
+        return securityProperties.getSecurityKey().equals(key);
     }
 }
