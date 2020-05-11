@@ -1,0 +1,113 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Tiny file manager</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <style>
+        .container {
+            margin: 50px auto 100px auto;
+        }
+
+        .table {
+            width: 100%;
+        }
+
+        .notification {
+            margin: 1rem auto;
+            padding: .5rem 2.5rem .5rem 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div th:if="${message!=null && message!=''}">
+        <div class="notification is-primary">
+            <button class="delete"></button>
+            <span th:text="${message}"/>
+        </div>
+    </div>
+
+    <div class="modal" th:classappend="${'ok'!=login?'is-active':''}">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <form method="POST" action="/login">
+                <section class="modal-card-body">
+                    <div class="field has-addons has-addons-centered">
+                        <p class="control">
+                            <input class="input" type="text" placeholder="Key" name="key">
+                        </p>
+                        <p class="control">
+                            <button class="button is-primary" type="submit">
+                                Enter
+                            </button>
+                        </p>
+                    </div>
+                </section>
+            </form>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" action="/upload">
+        <div class="field has-addons">
+            <div class="control">
+                <div class="file has-name" id="file-upload">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="file">
+                        <span class="file-cta">
+                            <span class="file-label" id="file-name">
+                                 Choose a file…
+                            </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="control">
+                <button class="button is-info" type="submit">
+                    Upload
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>File</th>
+            <th>Size</th>
+            <th>Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="file : ${files}">
+            <th><a th:href="${file.downloadPath}" th:text="${file.path.fileName}"></a></th>
+            <td><span th:text="${#numbers.formatDecimal(file.size/1024.0,0,2)+'KB'}"></span></td>
+            <td><span th:text="${#dates.format(file.lastModifiedTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+<script>
+    // notification delete按钮
+    document.addEventListener('DOMContentLoaded', () => {
+        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+            $notification = $delete.parentNode;
+
+            $delete.addEventListener('click', () => {
+                $notification.parentNode.removeChild($notification);
+            });
+        });
+    });
+
+    // upload绑定文件名
+    const fileInput = document.querySelector('#file-upload input[type=file]');
+    fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+            const fileName = document.querySelector('#file-upload #file-name');
+            fileName.textContent = fileInput.files[0].name;
+        }
+    }
+</script>
+</html>
