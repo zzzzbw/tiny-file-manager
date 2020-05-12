@@ -38,7 +38,7 @@ public class ManagerInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (isLogin(request)) {
+        if (isLogin(request) && modelAndView != null) {
             modelAndView.addObject("login", "ok");
         }
     }
